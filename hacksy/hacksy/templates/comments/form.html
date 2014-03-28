@@ -1,0 +1,58 @@
+{% load static from staticfiles %}
+{% load comments i18n %}
+
+{% if user.is_authenticated %}
+    <form action="{% comment_form_target %}" id="comment_form" method="post">{% csrf_token %}
+        
+        {% for field in form %}
+            {% if field.is_hidden %}
+                <div>{{ field }}</div>
+            {% endif %}
+        {% endfor %}
+        
+        {% if user.email %}
+            <input type="hidden" name="email" value="{{user.email}}"/>
+        {% else %}
+            <input type="hidden" name="email" value="tmp@gmail.com"/>
+        {% endif %}
+        <input type="hidden" name="next" value="{{next}}" />
+        
+        <div class="row-fluid">
+            <div class="span12">
+                <textarea class="span12 comment_textarea autosize-box" id="id_comment" rows="3" style="resize: none;" placeholder="What's hackin?" name="comment"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <input id="post-comment" type="submit" name="post" class="btn-hacksy pull-right" value="{% trans "Post" %}" />
+        </div>
+
+        
+        <script src="{% static 'lib/autosize/jquery.autosize.js' %}"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('.autosize-box').autosize({append: "\n"});
+                $("#comment_form").submit(function(){
+                    var data = $('#comment_form').serialize()
+                    $.post("{% url ajax-comments-post-comment %}",
+                            data,
+                            function(data){
+                                console.log(data);
+                                if(data!="")
+                                    $(".hk-comments-list").prepend(data);
+                                $("#id_comment").val("");
+                            }
+                    );
+                    return false;
+                });
+            });
+        </script>
+    </form>
+{% else %}
+    <div class="row-fluid">
+        <div class="span8 offset2">
+            <a href="{% url login %}?next={{request.get_full_path}}" class="span12 btn-hacksy btn-hacksy-links">Comment</a>
+        </div>
+    </div>
+{% endif %}

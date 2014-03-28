@@ -1,0 +1,21 @@
+{% load comments i18n %}
+<form action="{% comment_form_target %}" id="comment_form" method="post">{% csrf_token %}
+    {% for field in form %}
+        {% if field.is_hidden %}
+            <div>{{ field }}</div>
+        {% endif %}
+    {% endfor %}
+    {% if user.email %}
+        <input type="hidden" name="email" value="{{user.email}}"/>
+    {% else %}
+        <input type="hidden" name="email" value="tmp@gmail.com"/>
+    {% endif %}
+    <input type="hidden" name="next" value="{{next}}" />
+    <textarea class="comment_textarea" id="id_comment" rows=1 style="resize:none;height:50px;padding:15px;width:70%;float:left;" placeholder="Comment..." name="comment"></textarea>
+    <input type="submit" name="post" class="button pull-right" value="{% trans "Comment" %}" style="height:50px;width:30%;"/>
+    <script type="text/javascript">
+        $(function(){
+            $(".comment_textarea").autosize();
+        });
+    </script>
+</form>

@@ -1,0 +1,9 @@
+{% extends "hackathons/base.html" %}
+
+{% block body %}
+    {% for hackathon in hackathons %}
+        <div>
+            <a href="{{hackathon.get_absolute_url}}">{{hackathon}}</a>
+        </div>
+    {% endfor %}
+{% endblock %}

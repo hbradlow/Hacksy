@@ -1,0 +1,27 @@
+{% load thumbnail %}
+{% load static from staticfiles %}
+{% load endless %}
+
+{% paginate hacks %}
+{% for hack in hacks %}
+    <li class="centered">
+        <div class="thumbnail thumbnail-home">
+            <div class="hack-wrap">
+                <a href="{{hack.get_absolute_url}}">
+                    {% if hack.image %}
+                        {% thumbnail hack.image "360x300" crop="center" as im %}
+                            <img class="hack-image" src="{{im.url}}" alt="">
+                        {% endthumbnail %}
+                    {% else %}
+                        <img class="hack-image" src="{% static 'assets/images/defaults/default400x300.png' %}">
+                    {% endif %}
+                    <div class="text-box">
+                        <h2 class="clearfix" id="hack-title">{{ hack.name|truncatechars:20 }}</h2>
+                        <h4 class="clearfix" id="hack-description">{{ hack.description|truncatechars:86 }}<h5>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </li>
+{% endfor %}
+{% show_more %}

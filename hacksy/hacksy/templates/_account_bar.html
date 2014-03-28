@@ -1,0 +1,142 @@
+{% load static from staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+
+
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container-fluid">
+      
+      <a href="/">
+        <span class="brand" id="logo">hacksy</span>
+        
+        <!-- <img class="brand" id="logo" src="{% static 'assets/images/logo_small_border.png' %}" style="height:30px;margin-top:-5px"/> -->
+        
+      </a>
+      
+      <form class="navbar-form pull-left" method="get" action="{% url haystack_search %}" id="search_form">
+        <input class="span4" name="q" type="text" placeholder="Find hacks, hackers, and hackathons" autocomplete="off" id="id_search" />
+      </form>
+      
+      
+      <ul class="nav pull-right">        
+        {% if request.user.is_authenticated %}
+        <li>
+            <a id="nav-profile-btn" href="{% url profile %}">
+                {% if user.is_authenticated %}
+                    {% if user.get_profile.image %}
+                        {% thumbnail user.get_profile.image "30x30" crop="center" as im %}
+                            <img id="navbar-image" src="{{ im.url }}" alt="" />
+                        {% endthumbnail %}
+                    {% else %}
+                        <img id="navbar-image" src="{% static 'assets/images/defaults/default30x30.png' %}" alt="" />
+                    {% endif %}
+                {% endif %}
+            </a>
+        </li>      
+        <li><a href="{% url hack_create %}"><div>Post a Hack</div></a></li>
+        <li><a href="/hackathons/create/"><div class="">Host a Hackathon</div></a></li>
+        <li><a href="{% url logout %}"><div>Sign out</div></a></li>
+<!--      
+        <li id="nav-dropdown">
+          <a id="plus-btn" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="200" data-close-others="false" href="">
+            <strong style="font-size:22px;"><img src="{% static 'assets/icons/glyphicons_113_justify.png' %}"></strong>
+          </a>
+            <ul class="dropdown-menu">
+              <li><a href="{% url hack_create %}"><div>Post a Hack</div></a></li>
+              <li><a href="/hackathons/create/"><div>Host a Hackathon</div></a></li>
+              <li><a href="{% url logout %}"><div>Logout</div></a></li>
+            </ul>
+        </li> -->
+        {% else %}
+        <li><a href="{% url signin %}"><div class="">Sign in</div></a></li>
+        {% endif %}
+      </ul>
+    </div>
+</div>
+</div>
+
+
+
+<style type="text/css">
+.navbar-inner {
+  height:41px;
+}
+#logo {
+  margin-left: 20px;
+  font-family: 'Ropa Sans', sans-serif;
+  color: white;
+  font-size: 32px;
+  text-shadow: 1px 1px 1px #333;
+}
+#logo:hover {
+  text-shadow: 2px 2px 1px #333;
+} 
+
+#id_search {
+  margin-left: 20px;
+  border: 1px solid gray;
+  background-color: white;
+  color:#333;
+}
+.navbar .typeahead {
+    margin-top: 10px;
+    margin-left:20px;
+}
+#nav-profile-btn {
+  margin: 5px 20px 0px 0px;
+  padding: 0;
+}
+#navbar-image {
+  width: 30px;
+  height: 30px;
+  border: 1px solid white;
+}
+#navbar-image:hover {
+  border: 1px solid #666;
+}
+
+{% if user.is_authenticated %}
+@media all and (max-width: 932px) and (min-width: 430px) {
+  .navbar-inner {
+      height: 80px;
+    }
+    #logo {
+      margin-left: 0px;
+    }
+    body {
+      margin-top: 100px
+    }
+}
+@media all and (max-width: 429px) and (min-width: 1px) {
+  .navbar-inner {
+      height: 160px;
+    }
+    #logo {
+      margin-left: 0px;
+    }    
+    body {
+      margin-top: 120px
+    }
+    #navbar-image {
+      margin-left: 20px;
+    }
+}
+{% else %}
+@media all and (max-width: 900px) and (min-width: 1px) {
+  .navbar-inner {
+      height: 80px;
+    }
+    #logo {
+      margin-left: 0px;
+    }    
+    body {
+      margin-top: 100px
+    }
+}
+{% endif %}
+
+
+</style>
+
+<script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>

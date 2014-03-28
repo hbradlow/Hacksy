@@ -1,0 +1,394 @@
+{% extends "hackathons/base.html" %}
+{% load static from staticfiles %}
+{% load thumbnail %}
+{% load tz %}
+
+{% block head_title %}Host a Hackathon | Hacksy{% endblock %}
+
+
+{% block body %}
+
+<link href="{% static 'lib/datepicker/css/datepicker.css' %}" rel="stylesheet" />
+
+<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+	<div class="centered">
+		<label class="filebutton hktc-image-box">
+			<div class="picture-container">
+                {% if form.initial.image %}
+                    {% thumbnail form.initial.image "600x450" crop="center" as im %}
+                        <img id="hackathon-image" src="{{im.url}}" style"padding:0px;">
+                    {% endthumbnail %}
+                {% else %}
+                    <img id="hackathon-image" src="{% static 'assets/images/upload_photo_icon.png' %}" style="padding-top:130px;">
+                    <h3 class="add-image-caption" style="color: white;">Add Hackathon Picture</h3><p class="add-image-caption">(4:3 ratio)</p>
+                {% endif %}
+			</div>
+			<span><input type="file" name="image" id="id_image" onchange="readURL(this);"></span>
+		</label>
+        <div class="centered">{{form.image.errors}}</div>
+        
+        <script type="text/javascript">
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#hackathon-image').attr('src', e.target.result);
+                        $('#hackathon-image').css({padding : '0px',
+                                                   width:'100%',
+                                                   height:'100%'});
+                       	$('.add-image-caption').hide();
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+
+	</div>
+
+	<div class="container">
+	  <div class="row-fluid">
+	    <div class="span8 offset2">
+			
+			<div class="row-fluid">
+				<div class="span12">
+				    <div class="hkt-title box well">
+                        {{form.name.errors}}
+				      	<label for="id_name"><h3>Hackathon Name</h3></label>
+                        {% if form.initial %}
+                            <input class="span8" id="id_name" type="text" name="name" value="{{form.initial.name}}"/>
+                        {% else %}
+                            <input class="span8" id="id_name" type="text" name="name" />
+                        {% endif %}
+				    </div>
+				</div>
+<!--                 <div class="span6">
+                    <div class="hkt-title box well">
+                        {{form.name.errors}}
+                        <label for="id_name"><h3>Hackathon URL</h3></label>
+                        {% if form.initial %}
+                            hacksy.com/ <input class="span7" id="id_name" type="text" name="name" value="{{form.initial.name}}"/>
+                        {% else %}
+                            hacksy.com/ <input class="span7" id="id_name" type="text" name="name" />
+                        {% endif %}
+                    </div>
+                </div>  -->               
+			</div>
+
+			<div class="row-fluid">
+				<div class="span6">
+                    <div class="row-fluid">
+    			      <div class="hktc-description well">
+                          {{form.description.errors}}
+    			        <label for="id_description"><h4>Description</h4></label>
+                        {% if form.initial %}
+                            <textarea class="span12 autosize-box" id="id_description" rows="13" placeholder="Add a quick description..." name="description">{{form.initial.description}}</textarea>
+                        {% else %}
+                            <textarea class="span12 autosize-box" id="id_description" rows="13" placeholder="Add a quick description..." name="description"></textarea>
+                        {% endif %}
+    			      </div>
+                    </div>
+
+
+
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <div class="well hktc-schedule">
+                                {{form.name.errors}}
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <label for="id_schedule"><h4>Schedule</h4></label>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <table class="table table-bordered" id="schedule-table">
+                                            <tr>
+                                                <td class="event">Event</td>
+                                                <td class="time">Time</td>
+                                                <!-- <td class="remove" style="display:none;"><a href="" class="small">remove</a></td> -->
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <div id="schedule-reveal">
+                                            <table class="table table-bordered" style="border:none;border-left:none;">
+                                                <tr>
+                                                    <td class="event" style="border:none;border-left:none;"><input id="id_event" type="text" name="" placeholder="event" style="margin-bottom:0px;"/></td>
+                                                </tr>
+                                                <tr >
+                                                    <td class="time" style="border:none;border-left:none;">
+                                                        <input class="span5 datepicker" type="text" id="id_time_date" name="tmp" />
+                                                        <div class="input-append bootstrap-timepicker">
+                                                            <input type="text" class="timepicker_input input-small" id="id_time" style="margin-top:0px;" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>                                
+                                        </div>
+                                    </div>
+                                </div> 
+                                {% if hackathon %}
+                                    <input type="text" style="display:none;" id="id_events" name="events" value=""></input>
+                                {% else %}
+                                    <input type="text" style="display:none;" id="id_events" name="events"></input>
+                                {% endif %}
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <a href="#" class="btn-hacksy" id="schedule-add">Add Event</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>   
+
+
+
+
+				<div class="span6 hktc-detail">
+				      <div class=" span12s well">
+				      	<div class="row-fluid">
+					        <h4 class="span12">When</h4>
+					    </div>
+				        <div class="row-fluid">
+				        	<div class="span12">
+                        		{{ form.start_time.errors }}
+				        		<label for="id_start_time">From:</label>
+				        	</div>
+				        </div>
+				        <div class="row-fluid">
+                            {% if form.initial %}
+                                <div class="span7">
+                                    <input class="span12 datepicker" type="text" name="start_time_0" id="id_start_time" value="{{form.initial.start_time.date|date:"m/d/y"}}"/>
+                                </div>
+                                <div class="span5 input-append bootstrap-timepicker">
+                                    <input type="text" class="timepicker_input input-small" name="start_time_1" value="{{form.initial.start_time.time|time:"%I:%M %p"}}" style="" />
+                                </div>
+                            {% else %}
+                                <div class="span7">
+                                    <input class="span12 datepicker" type="text" name="start_time_0" id="id_start_time" />
+                                </div>
+                                <div class="span5 input-append bootstrap-timepicker">
+                                    <input id="thisthat" type="text" class="timepicker_input input-small" name="start_time_1" style="" />
+                                </div>
+                            {% endif %}
+				        </div>
+
+				        <div class="row-fluid">
+				        	<div class="span12">
+                        		{{ form.end_time.errors }}
+				        		<label for="id_end_time">To:</label>
+				        	</div>
+				        </div>
+				        <div class="row-fluid">
+                            {% if form.initial %}
+                                <div class="span7">
+                                    <input class="span12 datepicker" type="text" name="end_time_0" id="id_end_time" value="{{form.initial.end_time.date|date:"m/d/y"}}"/>
+                                </div>
+                                <div class="span5 input-append bootstrap-timepicker">
+                                    <input type="text" class="timepicker_input input-small" name="end_time_1" value="{{form.initial.end_time.time|time:"%I:%M %p"}}" style="" />
+                                </div>
+                            {% else %}
+                                <div class="span7">
+                                    <input class="span12 datepicker" type="text" name="end_time_0" id="id_end_time" />
+                                </div>
+                                <div class="span5 input-append bootstrap-timepicker">
+                                    <input type="text" class="timepicker_input input-small" name="end_time_1" style=";" />
+                                </div>
+                            {% endif %}
+				        </div>
+
+				      	<div class="row-fluid box">
+					        <h4 class="span12">Where</h4>
+					    </div>
+					    <div class="row-fluid">
+					        <div class="span12">
+                                {{form.location.errors}}
+					        	<label for="id_location">Address:</label>
+					        </div>
+					    </div>
+					    <div class="row-fluid">
+                            {% if form.initial %}
+                                <input class="span11" id="id_location" type="text" name="location" maxlength="500" value="{{form.initial.location}}"/>
+                            {% else %}
+                                <input class="span11" id="id_location" type="text" name="location" maxlength="500" />
+                            {% endif %}
+					    </div>
+                        <div class="row-fluid">
+                            {{form.location_notes.errors}}
+                            <div class="span12">
+                                <label for="id_location_notes">Addditional Directions:</label>
+                            </div>
+                        </div>                        
+                        <div class="row-fluid">
+                            {% if form.initial %}
+                                <textarea class="span11 autosize-box" id="id_location_notes" rows="1" placeholder="" name="location_notes">{{form.initial.location_notes}}</textarea>
+                            {% else %}
+                                <textarea class="span11 autosize-box" id="id_location_notes" rows="1" placeholder="" name="location_notes"></textarea>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row-fluid box">
+                            {{form.eventbrite_url.errors}}
+                            <label class="span12" for="id_eventbrite_url"><h4>Eventbrite URL</h4></label>
+                        </div>
+					    <div class="row-fluid">
+                            {% if form.initial %}
+                                <input class="span11" id="id_eventbrite_url" type="text" name="eventbrite_url" maxlength="500" value="{{form.initial.eventbrite_url}}"/>
+                            {% else %}
+                                <input class="span11" id="id_eventbrite_url" type="text" name="eventbrite_url" maxlength="500" />
+                            {% endif %}
+					    </div>
+				      </div>
+			    </div>			    
+			</div>
+
+
+        
+
+        <div class="row-fluid">
+            <div class="span12">
+                {% if form.initial %}
+                    <input class="span12 btn-hacksy btn-hacksy-large" type="submit" value="Update Hackathon"></input>
+                {% else %}
+                    <input class="span12 btn-hacksy btn-hacksy-large" type="submit" value="Create Hackathon"></input>
+                {% endif %}
+            </div>
+        </div>
+		
+	  </div>
+	</div>
+</form>
+
+
+
+
+<style type="text/css">
+/* Picture Styling */
+.hktc-image-box {
+  	margin: 0 auto;
+    margin-top: 120px;
+  	width: 600px;
+    height: 450px;
+    border: 9px solid #222;
+    background-color: #f89406;
+}
+label.filebutton {
+    overflow:hidden;
+    position:relative;
+}
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+
+.remove_table {
+    padding: 0;
+    margin:0; 
+}
+</style>
+
+{% endblock %}
+
+{% block extra_script %}
+
+    <script src="{% static 'lib/datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'js/bootstrap-timepicker.min.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+    <script src="{% static 'lib/autosize/jquery.autosize.js' %}"></script>
+    <script type="text/javascript">
+        $(function(){
+
+            $('.autosize-box').autosize({append: "\n"});
+            
+            $('#id_start_time').datepicker();
+            $('#id_end_time').datepicker();
+            $('#id_time_date').datepicker();
+            $(".timepicker_input").timepicker();
+
+            $("#schedule-reveal").hide();
+            
+            function update_option(){
+                $("#id_events").val("");
+                for(var i = 0; i<events.length; i++){
+                    if(events[i].valid){
+                        var val = $("#id_events").val();
+                        $("#id_events").val(val+"-----"+events[i].option);
+                    }
+                }
+            }
+
+            var events = new Array();
+
+            function Event(name,date,time){
+                var e = this;
+                this.name = name;
+                this.time = time;
+                this.valid = true;
+                this.date = date;
+                this.object = 
+                    $("<tr>" + 
+                    "<td class='event'>" + this.name + "<p><a href='#' class='small remove remove_table'>remove</a></p>" + "</td>" +
+                    "<td class='time'>" + this.date + ", " + this.time + "</td>"
+                    + "</tr>");
+
+                this.object.find(".remove_table").click(function(){
+                    e.valid = false;
+                    update_option();
+                    e.object.remove();
+                    return false;
+                });
+                this.option = this.name + ":::::" + this.date + " " + this.time;
+                $("#schedule-table").append(this.object);
+            }
+            $('#schedule-add').click(function() {
+                if ($("#schedule-reveal").is(':hidden')) {
+                    $("#schedule-reveal").fadeIn();
+                }
+                else {
+                    if($("#id_time").val()!="" && $("#id_event").val()!="")
+                    {
+                        events.push(new Event($("#id_event").val(),$("#id_time_date").val(),$("#id_time").val()));
+                        update_option();
+                    }
+                    $("#id_event").val("");
+                    // proceed to add event
+                    //$("#schedule-reveal").hide();
+                }
+                return false;
+            });
+
+            $("#id_time").keydown(function(){
+                if(event.keyCode == 13){
+                    return false;
+                }
+            });
+            $("#id_event").keydown(function(){
+                if(event.keyCode == 13){
+                    return false;
+                }
+            });
+
+            {% for event in hackathon.event_set.all %}
+                events.push(new Event("{{event.name}}","{{event.time.date}}","{{event.time.time|time:"H:i A"}}"));
+            {% endfor %}
+            update_option();
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% load profile_tags %}
+
+{% block head_title %}{{request.GET.q}}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="span10 offset1 margin">
+            
+            <div class="row-fluid">
+                <div class="span12">
+                    <h2>Search</h2>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row-fluid">
+                <div class="span12 centered">
+                    <form class="form-search" method="get" action="{% url haystack_search %}">
+                        <input class="span6" type="text" name="q" autocomplete="off">
+                    </form>  
+                </div>
+            </div>                      
+
+            <div class="row-fluid">
+                <div class="span12 centered">
+                    <small>Looking for:</small>
+                </div>
+            </div>
+            <div class="row-fluid">           
+                <div class="btn-group span12 centered" style="max-height:44px;">
+                    <button id="search_button_hacks" class="span4 btn-hacksy btn-active shadow-fade">hacks</button>
+                    <button id="search_button_hackers" class="span4 btn-hacksy btn-active shadow-fade">hackers</button>
+                    <button id="search_button_hackathons" class="span4 btn-hacksy btn-active shadow-fade">hackathons</button>
+                </div>
+            </div>
+
+            <hr />            
+            
+            <div class="row-fluid">
+                <div class="span8 offset2 margin well">
+                    {% if query %}
+
+                        {% for result in page.object_list %}
+                            
+                            {% with result.object as object %}
+                                {% if object|klass == "User" %}
+                                    <span class="search_hackers">
+                                        {% with object as user %}
+                                            {% include "profiles/_hacker.html" %}
+                                        {% endwith %}
+                                    </span>
+                                {% endif %}                            
+                                {% if object|klass == "Hackathon" %}
+                                    <span class="search_hackathons">
+                                        {% with object as hackathon %}
+                                            {% with user.get_profile as profile %}
+                                                {% include "hackathons/_hackathon.html" %}
+                                            {% endwith %}
+                                        {% endwith %}
+                                    </span>
+                                {% endif %}
+                                {% if object|klass == "Hack" %}
+                                    <span class="search_hacks">
+                                        {% with object as hack %}
+                                            {% include "hacks/_hack.html" %}
+                                        {% endwith %}
+                                    </span>
+                                {% endif %}
+                                <div style="margin-top:20px;"></div>
+                            {% endwith %}
+                            {% empty %}
+                            <p style="color:white;">No results found for '{{request.GET.q}}'. </p>
+
+                        {% endfor %}
+
+                        {% if page.has_previous or page.has_next %}
+                            <div>
+                                {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                                |
+                                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {# Show some example queries to run, maybe query syntax, something else? #}
+                    {% endif %}
+                </div>
+            </div>                
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+<script type="text/javascript">
+    $(window).load(function() {
+
+        $('.btn-active').css('box-shadow', "4px 4px 3px black");
+
+        var hacks = true;
+        var hackathons = true;
+        var hackers = true;
+
+        $("#search_button_hackathons").click(function(){
+            if(hackathons){
+                $(".search_hackathons").hide();
+                hackathons = false;
+            }
+            else{
+                $(".search_hackathons").show();
+                hackathons = true;
+            }
+        });
+        $("#search_button_hackers").click(function(){
+            if(hackers){
+                $(".search_hackers").hide();
+                hackers = false;
+            }
+            else{
+                $(".search_hackers").show();
+                hackers = true;
+            }
+        });
+        $("#search_button_hacks").click(function(){
+            if(hacks){
+                $(".search_hacks").hide();
+                hacks = false;
+            }
+            else{
+                $(".search_hacks").show();
+                hacks = true;
+            }
+        });
+
+        $('.btn-hacksy').click(function() {
+            if ($(this).hasClass('btn-active')) {
+                $(this).css('box-shadow', "none");
+                $(this).removeClass('btn-active');
+            }
+            else {
+                $(this).css('box-shadow', "4px 4px 3px black");
+                $(this).addClass('btn-active');
+            };
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

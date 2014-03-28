@@ -1,0 +1,55 @@
+{% load thumbnail %}
+{% load static from staticfiles %}
+
+<div class="thumbnail thumbnail-profile">
+    <a href="{{user.get_absolute_url}}">
+        <div class="row-fluid" style="max-height:92px;">
+            
+            <div class="span4">
+                {% if user.get_profile.image %}
+                    {% thumbnail user.get_profile.image "120x90" crop="center" as im %}
+                        <img class="profile-hack-image" src="{{im.url}}">
+                    {% endthumbnail %}
+                {% else %}
+                    <img src="{% static 'assets/images/defaults/default120x90.png' %}">
+                {% endif %}
+            </div>
+            <div class="span8">
+                <div class="row-fluid">
+                    <div class="span8">
+                        <h3 class="overflowed" id="hack-name">{{user.username|truncatechars:44}}</h3>
+                        <p class="overflowed" id="hack-description">{% if user.get_profile.about %}{{user.get_profile.about|truncatechars:80}}{% endif %}</p>
+                    </div>
+                    <div class="span4">
+                        <span class="small pull-right">Reputation: {{user.get_profile.reputation}}</span>
+                    </div>
+                </div>
+                {% if user.get_profile.first_language %}
+                    <div class="row-fluid">    
+                        <div class="span12">
+                            <small class="small pull-right">First Language: {{user.get_profile.first_language}}</small>
+                        </div>
+                    </div>                 
+                {% endif %}
+            </div>
+        </div>
+    </a>
+</div>
+
+<style type="text/css">
+    
+    #hack-name {
+        padding: 0px 0px 0px 0px;
+        margin: 0;
+        line-height: 35px;
+        height: 35px;
+        color: orange;
+    }
+    #hack-description {
+        font-size: 14px;
+        height: 40px;
+        padding: 0px 0px 0px 0px;
+        margin: 0px;
+        color: white;
+    }
+</style>

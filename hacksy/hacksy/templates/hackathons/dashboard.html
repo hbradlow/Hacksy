@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+{% load humanize %}
+{% load comments %}
+
+{% block head_title %}Big Hack{% endblock %}
+
+
+{% block body %}
+
+<div class="container-fluid" style="margin-top:-20px;">
+	<div class="row-fluid">
+	  	<div class="span8 offset2 box">
+        <div class="row-fluid">
+
+    	  	<div class="span3 margin">
+      			<div class="dash-profile centered">
+              <div class="row-fluid">
+                <div class="span12">
+          				<a href="#" class="">
+                    {% if team.image %}
+                        <img src="{{team.image.url}}" alt="" style="width:120px; height:90px;">
+                    {% else %}
+                        <img src="holder.js/120x90" alt="" style="width:120px; height:90px;">
+                    {% endif %}
+          				</a>
+                </div>
+              </div>
+              <div class="span12">
+                <a href="#" id="team-link">{{team.name}}</a>
+                <style type="text/css">#team-link:hover{text-decoration: underline;}</style>
+              </div>
+            </div>                          
+    			
+    			<div class="dash-time">
+    			  <div class="dash-timer centered">
+    			        <h4>Time left</h4>
+                    {% with hackathon.time_before_demo as htime %}
+                        {% if htime == -1 %}
+                            <div>Hackathon hasn't started yet.</div>
+                        {% else %}
+                            {% if htime %}
+                                <div><strong>{{htime}}</strong> before demo</div>
+                            {% else %}
+                                <div>Hackathon over.</div>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+    			        <div class="progress progress-warning">
+                    <div class="bar" style="width: {{hackathon.percent_complete}}%"></div>
+    			        </div>
+    			  </div>
+    			</div>
+			    <div class="dash-schedule centered margin">
+		        <div>
+              {% with hackathon.next_event as event %}
+                  <h4>What's Next</h4>
+                  {% if event %}
+                    <table class="table table-bordered">
+                      <tr>
+                        <td>{{event.time.time}}</td>
+                        <td>{{event.name}}</td>
+                      </tr>
+                    </table>
+                  {% endif %}
+              {% endwith %}
+		        </div>            
+			    </div>
+
+          <div class="row-fluid box">
+            <div class="span12">
+                <a href="{% url hack_create %}?hackathon={{hackathon.slug}}&submit=true" class="span12 btn btn-large btn-warning margin">Submit Hack</a>
+            </div>
+          </div>              
+
+    		</div>
+
+
+    		
+    		<div class="span9 right-column">
+          <div class="row-fluid">
+
+            <div class="span10 offset1 tabbable margin">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#hackathon-feed" data-toggle="tab">Feed</a></li>
+                <li class=""><a href="#hackathon-hacks" data-toggle="tab">Hacks</a></li>
+                <li class=""><a href="#hackathon-schedule" data-toggle="tab">Full Schedule</a></li>
+              </ul>
+              <div class="tab-content">
+                
+
+                <div class="tab-pane active" id="hackathon-feed">
+                  <div class="span10 offset1 dash-feed">
+                    <h3>Feed</h3>
+                    <div class="row-fluid">
+                        <div class="span10 offset1 hk-comments-post">
+                                {% get_comment_form for hackathon as form %}
+                                {% include "comments/form.html" %}
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 hk-comments-list">
+                            {% render_comment_list for hackathon %}
+                        </div>
+                    </div>
+                    {% comment %}
+                        <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/search?q=%23{{hackathon.name}}" data-widget-id="316391564576423936">Tweets about "#hackathon"</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                    {% endcomment %}
+                  </div>
+                </div>
+
+                <div class="tab-pane" id="hackathon-hacks">
+                    <div class="row-fluid">
+                      <ul class="thumbnails">
+                        {% for hack in hackathon.hack_set.all %}
+                            <li class="centered">
+                                <div class="thumbnail thumbnail-home">
+                                    <div class="hack-wrap">
+                                        <a href="{{hack.get_absolute_url}}">
+                                            {% if hack.image %}
+                                            <img class="hack-image" src="{{hack.image.url}}" alt="">
+                                            {% else %}
+                                            <img class="hack-image" src="holder.js/400x300">
+                                            {% endif %}
+                                            <div class="text-box">
+                                                <h2 class="clearfix" id="hack-title">{{hack.name}}</h2>
+                                                <h4 class="clearfix" id="hack-description">{{hack.description}}<h5>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="hackathon-schedule">
+                  <div class="span8 offset2">
+                    <h3>Full Schedule</h3>
+                    {% if hackathon.event_set.all %}
+                      <table class="table table-bordered">
+                          {% for event in hackathon.event_set.all %}
+                            <tr>
+                                <td>{{event.name}}</td>
+                                <td>{{event.time.time}}</td>
+                            </tr>
+                          {% endfor %}
+                      </table>
+                    {% endif %}
+                  </div>
+                </div>                
+
+              </div>
+            </div>
+
+        </div>
+      </div>
+
+    </div>
+	</div>
+</div>
+
+
+<script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

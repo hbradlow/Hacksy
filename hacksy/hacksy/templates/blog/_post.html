@@ -1,0 +1,12 @@
+<div class="box well">
+    <div class="row-fluid">
+        {{post.name}}
+    </div>
+    <div class="row-fluid">
+        {{post.author.get_full_name}}, {{post.pub_date.date}}
+    </div>
+    <hr />
+    <div class="row-fluid">
+        {{post.content}}
+    </div>
+</div>

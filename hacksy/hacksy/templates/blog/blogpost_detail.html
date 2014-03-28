@@ -1,0 +1,11 @@
+{% extends "blog/base.html" %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                {% include "blog/_post.html" %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

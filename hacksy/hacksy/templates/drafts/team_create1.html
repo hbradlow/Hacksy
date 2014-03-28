@@ -1,0 +1,237 @@
+{% extends "hackathons/base.html" %}
+{% load static from staticfiles %}
+
+{% block head_title %}Host | Hacksy{% endblock %}
+
+
+{% block body %}
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span8 offset2">
+      <form class="form-signin">
+        <div class="row-fluid">
+          <div class="span4">
+            
+            <label class="filebutton team-picture-box">
+              <div class="centered">
+                <img id="hack-image" src="{% static 'assets/images/upload_photo_icon.png' %}" style="padding-top:35px;">
+                <h3 style="color: white;">Add Hack Picture</h3>
+              </div>
+              <span><input type="file" name="image" id="id_image" onchange="readURL(this);"></span>
+            </label>
+<!-- 
+            <label class="filebutton hkc-image-box">
+                      
+                      <div class="centered ">
+                <img id="hack-image" src="{% static 'assets/images/upload_photo_icon.png' %}" style="padding-top:60px;">
+                <h3 id="caption"style="color: white;">Add Hack Picture</h3>
+              </div>
+
+              <span><input type="file" name="image" id="id_image" onchange="readURL(this);"></span>
+            
+            </label>
+
+ -->
+                <script type="text/javascript">
+                    function readURL(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#hack-image').attr('src', e.target.result);
+                            };
+
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+          </div>
+          <div class="span8">
+            <h4 class="">Team Name:</h4>
+            {{form.name.errors}}
+            <input type="text" class="input-block-level span12" placeholder="i.e. the big bosses">
+            <h4 class="">Hack Description:</h4>
+            {{form.description.errors}}
+            <textarea class="span12" rows="4" placeholder="Add a quick description..." style="resize: none;"></textarea>
+          </div>
+        </div>
+
+        <div class="row-fluid">
+          <div class="span12 well">
+            <h4>Hackers:</h4>
+            {{form.hackers.errors}}
+            <ul class="row-fluid" id="hacker-thumb-list">
+              <li class="span2 hacker-thumb">
+                <a href="#"><img id="tooltiped" data-toggle="tooltip" title="{{ user.get_full_name }}replace" data-placement="bottom" data-src="holder.js/64x64" alt=""></a>
+                <div class="hacker-name" style="display:none;">{{ user.get_full_name }}</div>
+              </li>
+            </ul>
+            <div class="row-fluid" id="add-hacker">
+              <div class="span12 box">
+                <a href="#" class="btn btn-small btn-warning">Add Hacker</a>
+              </div>
+            </div>    
+            <div class="row-fluid">
+              <div class="span7" id="add-hacker-reveal" style="display:none; margin-top:10px;">
+                <button type="button" class="close pull-left" aria-hidden="true">&times;</button>
+                <div class="row-fluid">
+                  <div class="span6">
+                    <h4 class="centered" style="color:lightgray;">Hacksy Profile</h4>
+                    <input id="hacker-name-field" type="text" class="span12 inlined" placeholder="Search on Hacksy...">
+                  </div>
+                  <div class="span5">
+                      <h4 class="centered" style="color:lightgray;">OR</h4>
+                      <input type="text" class="span12 inlined" placeholder="Hacker's name...">
+                  </div>
+                </div>
+                  <div class="row-fluid">
+                    <div class="span2">
+                      <a id="add-button" class="span12 btn btn-warning pull-right">add</a>
+                    </div>
+                  </div>
+                <input name="hackers" type="text" value="{{user.username}}" id="hacker-list" style="display:none;"></input>
+              </div>
+            </div>
+
+          </div>
+        </div>
+<!-- 
+        <div class="row-fluid">
+          <div class="span4">
+            <h4>Source Code:</h4>
+            <a class="btn btn-large btn-warning" type="submit">Link to Github Repo</a>  
+          </div>
+          <div class="span4 offset2">
+            <h4>Demo:</h4>
+            <a class="btn btn-large btn-warning" type="submit">Add Demo URL</a>  
+          </div>
+        </div> -->
+
+        <div class="row-fluid">
+          <input id="submit-button" class="span12 btn btn-warning btn-large" type="submit" value="Register" style="margin-top:20px;"></input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<style type="text/css">
+/* Form styling */
+body {
+  background-color: #f5f5f5;
+}
+.form-signin {
+  padding: 19px 29px 29px;
+  margin: 0 auto 20px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .title {
+  text-align: center;
+  padding: 10px 0px; 
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  font-size: 16px;
+  height: auto;
+  margin-bottom: 15px;
+  padding: 7px 9px;
+}
+/* Picture Styling */
+.team-picture-box {
+  height: 252px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #eee;
+  /*box-shadow: 5px 5px 5px lightgray;*/
+}
+label.filebutton {
+    overflow:hidden;
+    position:relative;
+    background-color:orange;
+}
+
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+</style>
+
+
+
+<script src="http://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+$(window).load(function() {
+
+  $('#tooltiped').tooltip();
+  $('#add-hacker-reveal').hide();
+
+  function close_add_box(){
+    $('#add-hacker-reveal').hide();
+    $('#add-hacker').show();
+    $('#submit-button').show();
+  };
+
+  $('#add-hacker').click(function() {
+    $('#add-hacker-reveal').show();
+    $('#add-hacker').hide();
+    $('#submit-button').hide();
+    return false;
+  });
+
+  $('#add-button').click(function(){
+    close_add_box();
+    var hthumb_list = $("#hacker-thumb-list");
+    var hthumb = $($(".hacker-thumb")[0]).clone();
+    var name = $("#hacker-name-field").val();
+    
+    hthumb.find(".hacker-name").html(name);
+    var option = "," + name;
+    var value = $("#hacker-list").val() + option;
+
+    hthumb_list.append(hthumb);
+    $("#hacker-list").val(value);
+    return false;
+    });
+
+
+  $("#hacker-name-field").keyup(function(event) {
+    if(event.keyCode == 13){
+      $("#add-hacker").click();
+    }
+  });
+
+  $('.close').click(function() {
+      close_add_box(); 
+      return false;
+  });
+
+});
+</script>
+
+
+{% endblock %}

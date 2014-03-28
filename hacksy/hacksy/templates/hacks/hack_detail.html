@@ -1,0 +1,238 @@
+{% extends "hacks/base.html" %}
+{% load static from staticfiles %}
+{% load comments %}
+{% load thumbnail %}
+
+{% block head_title %}{{ hack.name }}{% endblock %}
+
+{% block facebook_meta %}
+    <meta property="fb:app_id"          content="632049786821596" /> 
+    <meta property="og:url"             content="http://{{site.domain}}{{hack.get_absolute_url}}" /> 
+    <meta property="og:title"           content="Hacksy: {{hack.name}}" /> 
+{% endblock %}
+{% block facebook_image %}
+    {% if hack.image %}
+        <meta property="og:image" content="{{hack.image.url}}" />
+    {% else %}
+        {{block.super}}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="wrapper margin span10 offset1">
+            <div class="row-fluid">
+                <div class="span12">
+                    {% if user in hack.users.all %}
+                    <a href="{% url hack_edit hack.slug %}" class="btn btn-warning btn-edit pull-right">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if hack.hackathon %}
+                <div class="row-fluid">
+                    <div class="span12 centered hk-hackathon">
+                        <h2>
+                            This Hack
+                            {% if not hack.prize_name %}
+                                was built at
+                            {% else %}
+                                won {{hack.prize_name}} at
+                            {% endif %}
+                            <a href="{{hack.hackathon.get_absolute_url}}">{{hack.hackathon.name}}</a>
+                        </h2>
+                    </div>
+                </div>
+                <hr />
+            {% endif %}
+            
+            <div class="row-fluid">
+                <div class="span12 well">
+                    <div class="row-fluid">
+                        <div class="span7">
+                            {% if hack.image %}
+                                {% thumbnail hack.image "400x300" crop="center" as im %}
+                                    <img class="hack-image" src="{{ im.url }}" style="border: 6px solid #333;">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static 'assets/images/defaults/default400x300.png' %}" style="border: 6px solid #333;">
+                            {% endif %}
+
+                        </div>
+                        <div class="span5">
+                            <div class="row-fluid" style="height:88px">
+                                <div class="span12">
+                                    <div class="row-fuild">
+                                        <h1 class="hk-name" style="color:orange;font-size:32px;min-height:88px;word-break:break-all;">{{ hack.name|truncatechars:44 }}</h1>
+                                    </div>
+                                    <div class="row-fluid" style="height:110px">
+                                        <div class="span12">
+                                            <h4 style="margin-bottom:20px;">Awesomeness level:</h4>
+                                            <p class="inlined" style="font-size:72px;" id="awesomeness">{{ hack.awesomeness }}</p>
+                                        </div>
+                                    </div>
+                                    {% if user.is_authenticated and user not in hack.users.all %}
+                                        {% if user not in hack.awesomeness_votes.all %}
+
+                                            <div id="awesome" class="row-fluid">
+                                                <a href="#" class="span11 btn-hacksy btn-hacksy-large" style="margin-top:22px;" id="awesome_button">Awesome</a>
+                                            </div>
+                                            <div id="unawesome" class="row-fluid" style="display:none;">
+                                                <a href="#" class="span11 btn-hacksy btn-hacksy-large" style="margin-top:22px;" id="unawesome_button">Unawesome</a>
+                                            </div>
+                                        {% else %}
+                                            <div id="awesome" class="row-fluid" style="display:none;">
+                                                <a href="#" class="span11 btn-hacksy btn-hacksy-large" style="margin-top:22px;color:orange;border: 4px solid orange;" id="awesome_button">Awesome</a>
+                                            </div>
+                                            <div id="unawesome" class="row-fluid">
+                                                <a href="#" class="span11 btn-hacksy btn-hacksy-large" style="margin-top:22px;color:orange;border: 4px solid orange;" id="unawesome_button">Unawesome</a>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>         
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h2>Description</h2>
+                    <div class="hk-description well">{{ hack.description }}</div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row-fluid hk-buttons">
+                {% if hack.demo_link %}
+                <div class="span4 hk-demo">
+                    <a href="{{hack.demo_link}}" class="span12 btn-hacksy btn-hacksy-links" target="_blank">Demo</a>
+                </div>
+                {% else %}
+                <div class="span4 hk-demo">
+                    <a href="{{hack.demo_link}}" class="span12 btn-hacksy btn-hacksy-links btn-disabled" target="_blank">Demo</a>
+                </div>
+                {% endif %}
+                {% if hack.code_link %}
+                <div class="span4 hk-source">
+                    <a href="{{hack.code_link}}" class="span12 btn-hacksy btn-hacksy-links" target="_blank">Source Code</a>
+                </div>
+                {% else %}
+                <div class="span4 hk-source">
+                    <a href="{{hack.code_link}}" class="span12 btn-hacksy btn-hacksy-links btn-disabled" target="_blank">Source Code</a>
+                </div>
+                {% endif %}
+                {% if hack.video_link %}
+                <div class="span4 hk-video">
+                    <a href="{{hack.video_link}}" class="span12 btn-hacksy btn-hacksy-links" target="_blank">Video</a>
+                </div>
+                {% else %}
+                <div class="span4 hk-video">
+                    <a href="{{hack.video_link}}" class="span12 btn-hacksy btn-hacksy-links btn-disabled" target="_blank">Video</a>
+                </div>
+                {% endif %}
+            </div> 
+
+            <hr>           
+
+            <div class="row-fluid">
+                <h1 class="span12">Hackers</h1>
+            </div>            
+            <div class="row-fluid">
+                <div class="span12 well">
+                    <div class="row-fluid">
+                        <ul class="thumbnails">
+                            {% for user in hack.users.all %}
+                                <li class="span2 centered">
+                                    <div class="thumbnail thumbnail-hackers">
+                                        {% if user.get_profile.image %}
+                                            <a href="{{user.get_absolute_url}}">
+                                                {% thumbnail user.get_profile.image "80x80" crop="center" as im %}
+                                                    <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title='{{user.username}}' data-placement="bottom" src="{{im.url}}" alt="">
+                                                {% endthumbnail %}
+                                            </a>
+                                        {% else %}
+                                            <a href="{{user.get_absolute_url}}"><img class="hack-hackers-image tooltiped" data-toggle="tooltip" title='{{user.username}}' data-placement="bottom" src="{% static 'assets/images/defaults/default80x80.png' %}" alt=""></a>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>              
+            
+
+            <div class="row-fluid">
+                <div class="span12">
+<!--                     <div class="fb-like pull-right" data-href="http://{{site.domain}}{{hack.get_absolute_url}}" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div> -->
+                </div>
+            </div> 
+
+            <div class="row-fluid">
+                <div class="span8 offset2 hk-comments margin">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h2>Comments</h2>  
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span10 offset1 hk-comments-post">
+                                {% get_comment_form for hack as form %}
+                                {% url hack_detail hack.slug as next %}
+                                {% include "comments/form.html" %}
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 hk-comments-list">
+                            {% render_comment_list for hack %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+<script type="text/javascript">
+    $(window).load(function() {
+
+        $('.btn-disabled').removeAttr('href');
+
+        $('.tooltiped').tooltip();
+
+        $('#post-comment').hide();
+        $('textarea').focus(function() {
+            $('#post-comment').fadeIn();
+        });
+
+        $("#unawesome_button").click(function(){
+            $.get("{% url unawesome hack.slug %}",function(data){
+                $("#awesomeness").html(data.awesomeness);
+                $("#unawesome").hide();
+                $("#awesome").show();
+            });
+            return false;
+        });
+        $("#awesome_button").click(function(){
+            $.get("{% url awesome hack.slug %}",function(data){
+                $("#awesomeness").html(data.awesomeness);
+                $("#awesome").hide();
+                $("#unawesome").show();
+            });
+            return false;
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% load static from staticfiles %}
+{% load i18n %}
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    
+    <title>{% block head_title %}Hacksy{% endblock %}</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Share your hacks with the world. Hacksy is a place for hackers to showcase their work.">
+    <meta name="author" content="">
+
+    <!-- Facebook -->
+    {% block facebook_meta %}
+        <meta property="fb:app_id"          content="632049786821596" /> 
+        <meta property="og:url"             content="http://www.hacksy.co" /> 
+        <meta property="og:title"           content="Hacksy" /> 
+    {% endblock %}
+    {% block facebook_image %}
+        <meta property="og:image"           content="https://s3.amazonaws.com/hacksy/facebook_logo/fb_icon2.png" />
+    {% endblock %}
+    
+    {% block style_base %}
+    <link rel="shortcut icon" href="{% static "assets/images/favicon3.png" %}" />
+    <link href="{% static 'bootstrap/docs/assets/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/docs/assets/css/bootstrap-responsive.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+    {% endblock %}
+    {% block extra_style %}{% endblock %}
+
+    {% block extra_head_base %}
+		{% block extra_head %}{% endblock %}
+	{% endblock %}
+    
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'bootstrap/docs/assets/ico/apple-touch-icon-144-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'bootstrap/docs/assets/ico/apple-touch-icon-114-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'bootstrap/docs/assets/ico/apple-touch-icon-72-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'bootstrap/docs/assets/ico/apple-touch-icon-57-precomposed.png' %}">
+  
+    <!-- Google Web Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Permanent+Marker|Ropa+Sans|Open+Sans' rel='stylesheet' type='text/css'>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    
+  </head>
+
+  <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=632049786821596";
+    fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <div id="wrap">
+
+	{% block topbar_base %}
+		{% include "_account_bar.html" %}
+	{% endblock %}
+
+	{% block body_base %}
+		{% include "_messages.html" %}
+        <div class="content">
+		{% block body %}
+		{% endblock %}
+        </div>
+	{% endblock %}
+    <div id="push"></div>
+    </div>
+	
+    {% block footer_base %}
+		{% include "_footer.html" %}
+	{% endblock %}
+	{% block extra_body_base %}
+		{% block extra_body %}{% endblock %}
+	{% endblock %}
+
+
+    {% block script_base %}
+    <!-- Bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+	<script src="{% static 'bootstrap/docs/assets/js/bootstrap-transition.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-alert.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-modal.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-dropdown.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-scrollspy.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-tab.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-tooltip.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-popover.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-button.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-collapse.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/bootstrap-carousel.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap-typeahead.js' %}"></script>
+    <script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+    <!-- hover_dropdown -->
+    <script src="{% static 'lib/hover_dropdown/twitter-bootstrap-hover-dropdown.js' %}"></script>
+    <!-- autosize -->
+    <script src="{% static 'lib/autosize/jquery.autosize.js' %}"></script>
+
+    <script type="text/javascript">
+    $(function(){
+        // Thumbnail fix for IE < 9 (when CSS workaround does not work)
+        $('.row-fluid ul.thumbnails li.span6:nth-child(2n + 3)').css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span4:nth-child(3n + 4)').css('margin-left','0px');
+        $('.row-fluid ul.thumbnails li.span3:nth-child(4n + 5)').css('margin-left','0px');     
+        var item_urls = new Array();
+        function load_search_data(query,process){
+            return $.get('{% url ajax_hack_list %}', { q: query }, function (data) {
+                for(var i = 0; i<data.options.length; i++)
+                    item_urls[data.options[i]] = data.urls[i];
+                return process(data.options);
+            });
+        }
+        $('#id_search').typeahead({
+            source: load_search_data,
+            updater: function (item) {
+                if(item_urls[item]=="id_more")
+                {
+                    $("#search_form").submit();
+                    return this.query;
+                }
+                else
+                {
+                    $("#id_search").val(item);
+                    location.href = item_urls[item];
+                }
+                return item;
+            },
+            matcher: function(item){
+                if(item.toLowerCase().indexOf(this.query.toLowerCase()) !== -1)
+                    return true;
+                if(item_urls[item]=="id_more")
+                    return true;
+                return false;
+            }
+        });
+    });
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39697885-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+   <script type="text/javascript"> 
+    (function(){ 
+    var node = document.createElement("script"); 
+    node.setAttribute("type", "text/javascript"); 
+    node.setAttribute("src", "https://app.bugmuncher.com/js/bugMuncher.min.js"); 
+    document.getElementsByTagName("head")[0].appendChild(node); 
+    })();
+    var bugmuncher_options = {
+        language:'en',
+        position:'right',
+        show_intro:true,
+        show_preview:true,
+        label_text:'Feedback',
+        api_key:'7ffcd213d8bb6614b17fbae204cb1cf8940e9200'
+        };
+    </script> 
+    {% endblock %}{% block extra_script %}{% endblock %}
+
+  </body>
+</html>

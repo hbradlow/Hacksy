@@ -1,0 +1,422 @@
+{% extends "hacks/base.html" %}
+{% load static from staticfiles %}
+{% load webdesign %}
+{% load thumbnail %}
+
+{% block head_title %}Post a Hack | Hacksy{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row-fluid">
+    	<div class="wrapper margin span10 offset1">
+			<form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                <div class="centered">{{form.image.errors}}</div>
+	            <div class="row-fluid">
+                    <div class="span12 well margin">
+                        <div class="row-fluid">
+                            <div class="span7">
+                                <label class="filebutton hkc-image-box">
+                                    
+                                    <div class="centered">
+                                        {% if form.initial and form.initial.image %}
+                                            <img class="hack-image" id="hack-img" src="{{form.initial.image.url}}" >
+                                        {% else %}
+                                            <img id="hack-img" src="{% static 'assets/images/upload_photo_icon.png' %}" style="padding-top:60px;">
+                                        {% endif %}
+                                        <h3 class="add-image-caption" style="color: white;">Add Hack Picture</h3><p class="add-image-caption" style="color:white;margin-top:-10px">(4:3 ratio)</p>
+                                    </div>
+
+                                    <span><input type="file" name="image" id="id_image" onchange="readURL(this);"></span>
+                                
+                                </label>
+
+                                <script type="text/javascript">
+                                    function readURL(input) {
+                                        if (input.files && input.files[0]) {
+                                            var reader = new FileReader();
+
+                                            reader.onload = function (e) {
+                                                $('#hack-img').attr('src', e.target.result);
+                                                $('#hack-img').css({padding : '0px',
+                                                                        width:'100%',
+                                                                        height:'100%'});
+                                                $('.add-image-caption').hide();
+
+                                            };
+
+                                            reader.readAsDataURL(input.files[0]);
+                                        }
+                                    }
+                                </script>
+                            </div>                    
+
+                            <div class="span5" style="min-height:300px;">
+                                <div class="row-fluid">
+                                    <div class="span12 hk-name">
+                                        {{form.name.errors}}
+                                        <label class="" for="id_name"><h2>Hack Name</h2></label>
+                                        {% if form.initial %}
+                                            <input class="" id="id_name" type="text" name="name" maxlength="100" value="{{form.initial.name}}" placeholder="e.g. Super Awesome Hack"/>
+                                        {% else %}
+                                            <input class="" id="id_name" type="text" name="name" maxlength="100" placeholder="e.g. Super Awesome Hack"/>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span12 hk-description">
+                                            {{form.description.errors}}
+                                            <label class="" for="id_description"><h2>Description</h2></label>
+                                        {% if form.initial %}
+                                            <textarea class="span12 autosize-box" id="id_description" rows="5" placeholder="Tell us more about your super awesome hack" name="description" value="" style="min-height:127px;max-width:280px;">{{form.initial.description}}</textarea>
+                                        {% else %}
+                                            <textarea class="span12 autosize-box" id="id_description" rows="5" placeholder="Tell us more about your super awesome hack" name="description" style="min-height:127px;max-width:280px;"></textarea>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+	            </div>
+	           
+
+                <div class="row-fluid centered">
+                    <div class="span12" style="margin:10px 0px 30px 0px;">
+                        <h1 class="">Hackers</h1>
+                    </div>
+                </div>
+
+		        <div class="row-fluid">				
+                    {{form.users.errors}}
+                    <div class="span12 well">
+
+					<div class="row-fluid">
+						<ul class="thumbnails" id="hacker-thumb-list">
+                            <li class="span2 centered hacker-thumb" style="display:none;">
+                                <div class="thumbnail thumbnail-hackers">
+                                    <a href="#">
+                                        <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title="Hacker" data-placement="bottom" src="{% static 'assets/images/defaults/default80x80.png' %}" style="width:80px;height:80px;" alt=""/>
+                                        <a class="remove" href="#">remove</a>
+                                    </a>
+                                    <div class="hacker-name" style="display:none;">{{Hacker}}</div>
+                                </div>
+                            </li>
+                            {% if form.initial %}
+                                {% for hacker in form.initial.user_list %}
+                                    <li class="span2 centered hacker-thumb">
+                                        <div class="thumbnail thumbnail-hackers">
+                                            <a href="{{hacker.get_absolute_url}}">
+                                                {% if hacker.get_profile.image %}
+                                                    {% thumbnail hacker.get_profile.image "80x80" crop="center" as im %}
+                                                    <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title="{{ hacker.username }}" data-placement="bottom" src="{{im.url}}" alt=""/>
+                                                    <a class="remove" href="#">remove</a>
+                                                    {% endthumbnail %}
+                                                {% else %}
+                                                    <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title="{{ hacker.username }}" data-placement="bottom" src="{% static 'assets/images/hacker_default.png' %}" style="width:80px;height:80px;" alt=""/>
+                                                    <a class="remove" href="#">remove</a>
+                                                {% endif %}
+                                            </a>
+                                            <div class="hacker-name" style="display:none;">{{ hacker.username }}</div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="span2 hacker-thumb centered">
+                                    <div class="thumbnail thumbnail-hackers">
+                                        <a href="{{user.get_absolute_url}}">
+                                            {% if user.get_profile.image %}
+                                                {% thumbnail user.get_profile.image "80x80" crop="center" as im %}
+                                                <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title="{{ user.username }}" data-placement="bottom" src="{{im.url}}" alt=""/>
+                                                <a class="remove" href="#">remove</a>
+                                                {% endthumbnail %}
+                                            {% else %}
+                                                <img class="hack-hackers-image tooltiped" data-toggle="tooltip" title="{{ user.username }}" data-placement="bottom" src="{% static 'assets/images/hacker_default.png' %}" style="width:80px;height:80px;" alt=""/>
+                                                <a class="remove" href="#">remove</a>
+                                            {% endif %}
+                                        </a>
+                                        <div class="hacker-name" style="display:none;">{{ user.username }}</div>
+                                    </div>
+                                </li>
+                            {% endif %}
+						</ul>
+					</div>
+
+					<div class="row-fluid" id="add-hacker">
+						<div class="span2" style="margin-top:20px;">
+							<a href="#" class="btn-hacksy" id="add-hacker-btn">Add Hacker</a>
+						</div>
+					</div>
+		        
+					<div class="row-fluid">
+						<div class="span4" id="add-hacker-reveal" style="display:none; margin-top:10px; padding:10px;">
+							<div class="row-fluid">
+								<div class="span10">
+									<input id="hacker-name-field" type="text" class="span12 inlined" placeholder="Search on Hacksy..." autocomplete="off">
+                                    <select multiple id="id_users" name="users" style="display:none;">
+                                    </select>
+								</div>
+								<div class="">
+									<button type="button" class="close" aria-hidden="true">&times;</button>
+								</div>
+							</div>
+							<div class="row-fluid">
+								<div class="span12"><a href="" id="add-button" class="span12 btn-hacksy">Add</a></div>
+							</div>
+						</div>
+					</div>
+
+                </div>
+
+		        </div>
+		        
+
+
+
+                <div class="row-fluid centered">
+                    <div class="span12" style="margin:10px 0px 30px 0px;">
+                        <h1 class="">Content Links</h1>
+                    </div>
+                </div>
+                <div class="row-fluid">
+	                <div class="span4 hkc-link centered well">
+                        {{form.demo_link.errors}}
+	                	<label for="id_demo_link"><h4>Demo</h4></label>
+                        {% if form.initial %}
+                            <input id="id_demo_link" type="text" name="demo_link" value="{{form.initial.demo_link}}"/>
+                        {% else %}
+                            <input id="id_demo_link" type="text" name="demo_link" />
+                        {% endif %}
+	                </div>
+
+	                <div class="span4 hkc-link centered well">
+                        {{form.code_link.errors}}
+	                	<label for="id_code_link"><h4>Source Code</h4></label>
+                        {% if form.initial %}
+                            <input id="id_code_link" type="text" name="code_link" value="{{form.initial.code_link}}"/>
+                        {% else %}
+                            <input id="id_code_link" type="text" name="code_link" />
+                        {% endif %}
+	                    <!-- <a href="{{hack.code_link}}" class="btn">Select Repo from Github</a> -->
+	                </div>
+	                
+	                <div class="span4 hkc-link centered well">
+                        {{form.video_link.errors}}
+	                	<label for="id_video_link"><h4>Video Presentation</h4></label>
+                        {% if form.initial %}
+                            <input id="id_video_link" type="text" name="video_link" value="{{form.initial.video_link}}"/>
+                        {% else %}
+                            <input id="id_video_link" type="text" name="video_link" />
+                        {% endif %}
+	                </div>
+	            </div>
+				
+				<hr />
+
+
+				<div class="row-fluid">
+	                <div class="span12 centered">
+                        {{form.hackathon.errors}}
+	                	<label for="id_hackathon"><h3 class="">Did you build this hack during a hackathon?</h3></label>
+	                </div>
+	            </div>
+	            <div class="row-fluid">
+	                <div class="span4 offset4">
+                        {% if form.initial %}
+                            <input class="span12 input-large" id="id_hackathon" type="text" name="hackathon" placeholder="Hackathon name" data-provide="typeahead" autocomplete="off" value="{{form.initial.hackathon}}"/>
+                        {% else %}
+                            <input class="span12 input-large" id="id_hackathon" type="text" name="hackathon" placeholder="Hackathon name" data-provide="typeahead" autocomplete="off"/>
+                        {% endif %}
+	                </div>
+	            </div>
+	            
+	            <hr />
+
+	            <div class="row-fluid">
+	                <div class="span12">
+                        {% if form.initial and not submit %}
+                            <input class="span12 btn-hacksy btn-hacksy-large" type="submit" value="Update Hack"></input>
+                        {% else %}
+                            <input class="span12 btn-hacksy btn-hacksy-large" type="submit" value="Submit Hack"></input>
+                        {% endif %}
+	                </div>
+	            </div>
+
+        	</form>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+/* Picture Styling */
+.hkc-image-box {
+    padding: 0px 0px 0px 0px;
+    width: 400px;
+	height: 300px;
+    border: 1px solid #222;
+  	/*box-shadow: 5px 5px 5px lightgray;*/
+}
+.hkc-image-box:hover {
+    border: 1px solid white;
+}
+label.filebutton {
+    overflow:hidden;
+    position:relative;
+    background-color: #f89406;
+}
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+
+form .counter{
+    font-size: 16px;
+    font-weight: normal;
+    color:#222;
+    margin-left: 20px;
+    } 
+form .exceeded{color:#600;}
+
+</style>
+
+
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'lib/autosize/jquery.autosize.js' %}"></script>
+<script src="{% static 'lib/charCount/charCount.js' %}"></script>
+
+
+<script type="text/javascript">
+    $(window).load(function() {
+
+        function update_remove_links(){
+            $(".remove").click(function(){
+                $(this).parent().parent().remove();
+                var username = $(this).parent().find("img").attr("data-original-title");
+                option_items[username].remove();
+                return false;
+            });
+        }
+        update_remove_links();
+
+        // charCount for input box
+        $("#id_name").charCount({allowed:32,warning: 4});
+
+        $(function(){
+            $('.autosize-box').autosize({append: "\n"});
+        });
+
+        var usernames = new Array();
+        var option_items = new Array();
+        var option;
+        {% if form.initial %}
+            {% for hacker in form.initial.user_list %}
+                option =  "<option value='{{hacker.pk}}' selected='selected'></option>";
+                option_items["{{hacker.username}}"] = $(option); 
+                $("#id_users").append(option_items["{{hacker.username}}"]);
+            {% endfor %}
+        {% else %}
+            option =  "<option value='{{user.pk}}' selected='selected'></option>";
+            option_items["{{user.username}}"] = $(option); 
+            $("#id_users").append(option_items["{{user.username}}"]);
+        {% endif %}
+        var hackathons = new Array();
+
+        $('.tooltiped').tooltip();
+        $('#add-hacker-reveal').hide();
+
+        function close_add_box(){
+        $('#add-hacker-reveal').hide();
+        $('#add-hacker').show();
+        };        
+
+        $('#add-hacker').click(function() {
+            $('#add-hacker-reveal').show();
+            $('#add-hacker').hide();
+            return false;
+        });
+
+        $("#hacker-name-field").keyup(function(event) {
+            if(event.keyCode == 13){
+                return false;
+            }
+        });
+        $("#hacker-name-field").keydown(function(event) {
+            if(event.keyCode == 13){
+                return false;
+            }
+        });
+
+        $('#add-button').click(function(){
+            close_add_box(); 
+
+            var hthumb_list = $("#hacker-thumb-list");
+            var hthumb = $($(".hacker-thumb")[0]).clone();
+            var name = $("#hacker-name-field").val();
+            
+            hthumb.find(".hacker-name").html(name);
+            var option = "<option value='"+ usernames[name] + "' selected='selected'></option>";
+
+            option_items[name] = $(option);
+            $("#id_users").append(option_items[name]);
+
+            if(images[name]!=null)
+                hthumb.find("img").attr({"src":images[name]});
+            hthumb.find("img").attr({"title":name});
+            hthumb.find("a")[0].href = "{% url profile %}" + name;
+
+            $(hthumb).show();
+            hthumb_list.append(hthumb);
+            //$("#hacker-list").val(value);
+            $('.tooltiped').tooltip();
+            update_remove_links();
+            return false;
+        });
+
+        $('.close').click(function() {
+            close_add_box(); 
+            return false;
+        });
+
+        var images = new Array();
+        function load_users_data(query,process){
+            return $.get('{% url ajax_profile_list %}', { q: query }, function (data) {
+                for(var i = 0; i<data.options.length; i++){
+                    usernames[data.options[i]] = data.pks[i];
+                    images[data.options[i]] = data.images[i];
+                }
+                return process(data.options);
+            });
+        }
+        function load_hackathon_data(query,process){
+            return $.get('{% url ajax_hackathon_list %}', { q: query }, function (data) {
+                for(var i = 0; i<data.options.length; i++){
+                    hackathons[data.options[i]] = data.pks[i];
+                }
+                return process(data.options);
+            });
+        }
+        $(function(){
+            $('#id_hackathon').typeahead({
+                source: load_hackathon_data,
+            });
+            $('#hacker-name-field').typeahead({
+                source: load_users_data,
+            });
+        });
+    });
+</script>
+{% endblock %}

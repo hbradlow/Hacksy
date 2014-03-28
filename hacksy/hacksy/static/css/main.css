@@ -1,0 +1,649 @@
+
+/* GLOBAL STYLES
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+body {
+  background-image:url('../assets/patterns/wild_oliva/wild_oliva.png');
+  background-repeat:repeat;
+}
+.content {
+  margin-top: 40px;
+  margin-bottom: 60px;
+}
+.margin {
+  margin-top: 40px;
+}
+
+/* For development */
+.centered {
+  text-align: center;
+}
+.inlined {
+  display: inline;
+}
+.show {
+  background-color: #eee;
+}
+
+/* Marker font*/
+.marker-font {
+  font-family: 'Ropa Sans', sans-serif;
+}
+/* Glowing font */
+.glow {
+  color: orange;
+  text-shadow: 1px 1px 30px orange;
+}
+/* Small font */
+.small {
+  font-size: 11px;
+  color: gray;
+}
+
+/* autosize textarea */
+textarea {
+  resize: none;
+  border: 1px solid black;
+  resize: none;
+}
+.autosize-box {
+  vertical-align: top;
+  -webkit-transition: height 0.2s;
+  -moz-transition: height 0.2s;
+  transition: height 0.2s;
+}
+
+/* Scales uploaded pictures properly */
+.picture-container {
+  background-size: cover;
+}
+
+
+/* Changes border color of focused forms */
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {   
+border-color: orange;
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px orange;
+outline: 0 none;
+}
+
+
+/* links */
+a:hover {
+  text-decoration: underline;
+}
+
+/* 'remove' links */
+.remove {
+  font-size: 11px;
+  color: #333;
+}
+.remove:hover {
+  text-decoration: underline;
+}
+
+/* Makes box-shadows fade in and out */
+.shadow-fade {
+    box-shadow: 0 0 0 0 black;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+/* Text overflow */
+.overflowed {
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+
+/* Error Messages */
+.errorlist {
+  list-style-type: none;
+  padding: 5px;
+  margin: 0px; 
+}
+.errorlist li {
+  color: orange;
+}
+
+/* IMAGE SIZES
+    - Image of people (hacker thumbnails, profile pictures, profile thumbnails) have a square ratio
+    - Images of hacks have a 4:3 ratio
+    - Hackathon cover pictures have a 4:3 ratio (still unsure about this one)
+******************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+.hack-image {
+  width: 400px;
+  height: 300px;
+}
+.hack-hackers-image {
+  width: 80px;
+  height: 80px;
+}
+.profile-image {
+  width: 250px;
+  height: 250px;
+}
+.profile-hack-image {
+  width: 120px;
+  height: 90px;
+  border: 1px solid black;  
+}
+.comment-image {
+  width: 35px;
+  height: 35px;
+  border: 1px solid #222;
+}
+.comment-image:hover {
+  border: 1px solid orange;
+}
+
+
+/* THUMBNAILS
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/
+
+/* fix left-margin problem */
+ul.thumbnails li.span4:nth-child(3n + 4) {
+  margin-left : 0px;
+}
+ul.thumbnails li.span3:nth-child(4n + 5) {
+  margin-left : 0px;
+}
+ul.thumbnails li.span12 + li {
+  margin-left : 0px;
+}
+
+/* Hacker thumbnails */
+img.tooltiped {
+  /*border: 1px solid black;*/
+}
+img.tooltiped:hover {
+  /*border: 1px solid orange;*/
+}
+.thumbnail-hackers {
+    border: 1px solid black;
+    width: 80px;
+    height: 80px;
+    border-radius: 0px;
+    padding: 0px;
+}
+.thumbnail-hackers:hover {
+    border: 1px solid orange;
+    width: 80px;
+    height: 80px;
+    border-radius: 0px;
+    padding: 0px;
+}
+
+/* Thumbnails hackathon details */
+.thumbnail-info {
+    border: 1px solid #333;
+    color: #333;
+    border-radius: 0px;
+    padding: 0px;
+}
+.thumbnail-podium:hover {
+  border: 1px solid orange;
+}
+
+
+/* Profile thumbnails*/
+.thumbnails-profile {
+    margin-left: 0px;
+    padding-left: 0px;
+}
+.thumbnail-profile {
+    margin-top: 20px;
+    background-color: #222;
+    padding: 10px;
+    border: 1px solid black;
+    max-height: 114px;
+    border-radius: 0px;
+}
+.thumbnail-profile:hover {
+    border: 1px solid orange; 
+}
+
+/* BUTTONS
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/
+
+#awesome_button, #unawesome_button {
+  font-family: 'Ropa Sans', sans-serif;
+  border: 4px solid #222;
+  color: white;
+}
+#awesome_button:hover, #unawesome_button:hover {
+  font-family: 'Ropa Sans', sans-serif;
+  border: 4px solid orange;
+  color: orange;
+}
+.btn-hacksy {
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid black;
+  color: white;
+  background-color: #333;
+  padding: 5px 10px;
+
+}
+.btn-hacksy:hover {
+  color: orange;
+  background-color: none;
+  text-decoration: none;
+  border: 1px solid orange;
+}
+
+.btn-hacksy-large {
+  color: white;
+  border: 1px solid #111;
+  padding: 20px 30px 20px 30px;
+  font-size: 28px;
+}
+.btn-hacksy-links {
+  color: white;
+  border: 1px solid #111;
+  margin-top: -5px;
+  padding: 20px 30px 20px 30px;
+  font-size: 28px;
+}
+.btn-hacksy-small {
+  padding: 50px 5px 5px 5px;
+  font-size: 12px;
+}
+.btn-edit {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.btn-disabled {
+  text-align: center;
+  border: 1px solid black;
+  color: black;
+  background-color: #222;
+}
+.btn-disabled:hover {
+  color: black;
+  background-color: none;
+  text-decoration: none;
+  border: 1px solid black;
+}
+.btn-active {
+  color: orange;
+  background-color: none;
+  text-decoration: none;
+  border: 1px solid orange;
+}
+
+
+
+
+/* HOME PAGE
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+.blurb {
+  margin: 60px 0px 60px 0px;
+}
+
+.home-submit-box {
+  border: 1px solid #222;
+  text-align: center;
+  margin: 20px auto 20px auto;
+  width: 300px; 
+  padding: 5px;
+  background-color: #222;
+}
+.home-submit-box {
+  font-size: 32px;
+  color: white;
+}
+.home-submit {
+  text-decoration: none;
+}
+.home-submit-box:hover {
+  color: orange;
+  border: 1px solid orange;
+}
+.home-submit:hover {
+  text-decoration: none;
+  color: white;
+}
+.featured-title {
+  text-align: center;
+  margin: 60px 0px 20px 0px; 
+}
+#home-submit2 {
+  margin-top:50px;
+  margin-bottom:120px;
+  font-size:24px;
+  color: black;
+}
+
+
+/* HACK_CREATE
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/
+
+.hkc-link {
+}
+
+
+/* HACK_DETAIL
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+.hk-name {
+  
+}
+.hk-description {
+  
+}
+.hk-hackathon {
+
+}
+.hk-demo {
+  
+}
+.hk-source {
+
+}
+.hk-video {
+
+}
+.hk-comments {
+  border-style: solid;
+  border-color: #222;
+  border-width: 2px;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 60px;
+  min-height: 200px;
+}
+.hk-comments-post {
+
+}
+.hk-comments-list {
+
+}
+.comment-text {
+  font-size: 14px;
+}
+.comment-timestamp {
+  font-size: 11px;
+  color: gray;
+}
+.comment-add-subcomment {
+  font-size: :11px;
+  padding-left: 4px;
+}
+
+/* HACK_COMMENTS
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+
+
+
+
+/* ADD_HACKER
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+#add-hacker-reveal {
+  border: 2px solid #333;
+  border-radius: 3px;
+  padding: 5px;
+  padding-bottom: 10px;
+}
+
+
+/* HACKATHON_DETAIL
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+.box {
+  margin-top: 40px;
+}
+.hkt-register {
+  margin: 5px;
+}
+.hkt-description {
+  margin-top: 20px;
+}
+.hkt-details {
+  margin-top: 40px;
+  padding-bottom: 30px;
+}
+.hkt-hackers {
+
+}
+.hkt-judges {
+
+}
+.hkt-sponsors {
+
+}
+.schedule table {
+  /*width: 400px;*/
+}
+.schedule tr.event {
+  /*width: 50%;*/
+}
+.schedule tr.time {
+  /*width: 50%;*/
+}
+
+
+/* HACKATHON_CREATE
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+.hktc-description {
+  min-height: 350px;
+}
+.hktc-schedule {
+  min-height: 200px;
+}
+
+
+/* DASHBOARD
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+.dash-profile {
+
+}
+.dash-profile a {
+  position: inline;
+  text-decoration: none;
+}
+.dash-time {
+  margin-top: 40px;
+}
+.dash-schedule {
+
+}
+.dash-timer {
+  margin: 0 auto;
+}
+.right-column {
+  border-left-style: solid;
+  border-left-color: #222;
+  border-left-width: 2px;
+  height: 1000px;
+}
+.dash-submit-box {
+  width: 100%;
+  padding: 60px;
+  font-size: 36px; 
+  background-color: orange 
+}
+.dash-submit {
+  text-decoration: none;
+  color: white;
+}
+.dash-submit-box:hover {
+  background-color: darkorange;
+}
+.dash-submit:hover {
+  text-decoration: none;
+  color: white;
+}
+.dash-feed {
+
+}
+
+
+/* PROFILE
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/
+
+.profile-wrapper {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  border-left-style: solid;
+  border-right-style: solid;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-left-color: #222;
+  border-right-color: #222;
+}
+#popularity {
+
+}
+#details {
+
+}
+#language {
+  font-size:16px;
+}
+#membership {
+  font-size:16px;
+}
+#location {
+  font-size:16px;
+}
+#bio {
+  border: 1px solid orange;
+  border-radius: 3px;
+  padding: 20px;
+  overflow: scroll;
+}
+#bio h6 {
+  margin-top: 0px;
+  padding-top: 0px;
+  color: white;
+}
+
+
+
+/* BROWSE
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+.centered h2 {
+  margin-bottom: 40px;
+}
+.centered input {
+  width: 60%;
+  font-size: 14px;
+}
+.centered .btn-group {
+  text-align: center;
+}
+.centered #start-host {
+  margin: 40px; 
+}
+
+
+
+
+/* FOOTER
+********************************************************************************************************************************************************
+********************************************************************************************************************************************************
+*/ 
+
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by it's height */
+  margin: 0 auto -60px;
+}
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+  height: 40px;
+}
+#footer {
+  padding-top: 20px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: orange; 
+  /*background-color: #f5f5f5;*/
+}
+#footer p {
+  color: gray;
+}
+#footer a {
+  color: lightgray;
+  padding-left: 20px;
+  text-decoration: none;
+  font-weight: bold;
+}
+#footer a:hover {
+  color: gray;
+}
+#blog {
+  color: orange;
+}
+#blog:hover {
+  color: gray;
+  font-weight: bold;
+  text-shadow: none;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+  #footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

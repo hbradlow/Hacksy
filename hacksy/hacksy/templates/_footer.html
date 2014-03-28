@@ -1,0 +1,30 @@
+{% load static %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+<div id="footer">
+  <div class="container">
+    <p class="pull-right">
+    	<a classs="shadow-fade" href="https://www.facebook.com/hacksypage" target="_blank"><img src="{% static 'assets/social_icons/facebook.png' %}" style="width: 32px; height: 32px;"></a>
+    	<a href="https://twitter.com/hacksytweet" target="_blank"><img src="{% static 'assets/social_icons/twitter.png' %}" style="width: 32px; height: 32px;"></a>
+		<a href="http://instagram.com/instahacksy?ref=badge" class="ig-b- ig-b-32"><img src="//badges.instagram.com/static/images/ig-badge-32.png" alt="Instagram" /></a>
+    	<!-- <a href="#"><strong id="feedback">Feedback</strong></a -->
+    </p>
+	<p style="font-size:14px;">
+		2013 Hacksy, Inc.
+		<a style="font-size:12px;" href="{% url privacy %}">Privacy</a>
+		<a style="font-size:12px;" href="{% url terms %}">Terms</a>
+		<a style="font-size:12px;" href="{% url contact %}">Contact</a>
+		<a href="{% url blog %}"><strong class="glow" id="blog" style="font-size:12px;">Blog</strong></a>
+	</p>
+  </div>
+</div>
+
+<style>
+.ig-b- { display: inline-block; margin-left: 20px;}
+.ig-b- img { visibility: hidden; }
+.ig-b-:hover { background-position: 0 -60px; } .ig-b-:active { background-position: 0 -120px; }
+.ig-b-32 { width: 32px; height: 32px; background: url(//badges.instagram.com/static/images/ig-badge-sprite-32.png) no-repeat 0 0; }
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+.ig-b-32 { background-image: url(//badges.instagram.com/static/images/ig-badge-sprite-32@2x.png); background-size: 60px 178px; } }</style>
+

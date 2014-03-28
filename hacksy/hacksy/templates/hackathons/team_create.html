@@ -1,0 +1,277 @@
+{% extends "hacks/base.html" %}
+{% load static from staticfiles %}
+{% load webdesign %}
+{% load thumbnail %}
+
+{% block head_title %}Hacksy{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row-fluid">
+      <div class="wrapper margin span10 offset1">
+      <form action="" method="POST" enctype="multipart/form-data"> {% csrf_token %}
+              <div class="row-fluid">
+                  <div class="span4 ">
+                    
+                    <label class="filebutton hkc-image-box">
+                      
+                      <div class="centered ">
+                <img id="hack-image" src="{% static 'assets/images/upload_photo_icon.png' %}" style="padding-top:80px;">
+                <h3 id="caption" style="color: white;">Add Hack Picture</h3>
+              </div>
+
+              <span><input type="file" name="image" id="id_image" onchange="readURL(this);"></span>
+            
+            </label>
+
+                        <script type="text/javascript">
+                            function readURL(input) {
+                                if (input.files && input.files[0]) {
+                                    var reader = new FileReader();
+
+                                    reader.onload = function (e) {
+                                        $('#hack-image').attr('src', e.target.result);
+                                        $('#hack-image').css({ padding : '0px',
+                                                               height : '100%',
+                                                               width: '100%'});
+                                        $('#caption').hide();
+
+                                    };
+
+                                    reader.readAsDataURL(input.files[0]);
+                                }
+                            }
+                        </script>
+                  </div>
+                  <div class="span8 well hkc-info">
+                    <div class="hk-name">
+                            {{form.name.errors}}
+                        <label for="id_name"><h2>Hack Name:</h2></label>
+                        <input id="id_name" type="text" name="name" maxlength="100" />
+                      </div>
+                      <div class="hk-description">
+                            {{form.description.errors}}
+                        <label for="id_description"><h2>Hack Description:</h2></label>
+                        <textarea class="span12 autosize-box" id="id_description" rows="4" placeholder="Add a quick description..." name="description"></textarea>
+                      </div>
+                  </div>
+              </div>
+                      
+
+            <div class="row-fluid hkc-hackers">
+              <div class="well">
+                <div class="span12">
+                  <div class="row-fluid">
+                    <h2 class="span12">Hackers:</h2>
+                    {{form.hackers.errors}}
+                  </div>
+                  <div class="row-fluid">
+                    <div class="span12" id="hacker-thumb-list">
+                      <div class="span1 hacker-thumb">
+                          <a href="{{user.get_absolute_url}}">
+                              {% if user.get_profile.image %}
+                                {% thumbnail user.get_profile.image "64x64" crop="center" as im %}
+                                    <img class="tooltiped" data-toggle="tooltip" title="{{ user.username}}" data-placement="bottom" src="{{im.url}}" alt=""/>
+                                {% endthumbnail %}
+                              {% else %}
+                                  <img class="tooltiped" data-toggle="tooltip" title="{{ user.username}}" data-placement="bottom" data-src="holder.js/64x64" alt=""/>
+                              {% endif %}
+                          </a>
+                        <div class="hacker-name" style="display:none;">{{ user.get_full_name }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row-fluid" id="add-hacker">
+                    <div class="span12 box">
+                      <a href="#" class="btn btn-small btn-warning" id="add-hacker-btn">Add Hacker</a>
+                    </div>
+                  </div>
+                </div>
+                  
+                <div class="row-fluid">
+                  <div class="span4" id="add-hacker-reveal" style="display:none; margin-top:10px;">
+                    <button type="button" class="close pull-left" aria-hidden="true">&times;</button>
+                    <div class="row-fluid">
+                      <div class="span6">
+                        <h4 class="centered" style="color:lightgray;">Hacksy Profile</h4>
+                        <input id="hacker-name-field" type="text" class="span12 inlined" placeholder="Search on Hacksy..." data-provide="typeahead" autocomplete="off">
+                      </div>
+                      <div class="span5">
+                          <h4 class="centered" style="color:lightgray;">OR</h4>
+                          <input id="anon-name-field" type="text" class="span12 inlined" placeholder="Hacker's name...">
+                      </div>
+                    </div>
+                      <div class="row-fluid">
+                        <div class="span2" style="margin-left:12px;">
+                          <a id="add-button" class="btn btn-warning">add</a>
+                        </div>
+                      </div>
+                    <input name="hackers" type="text" value="{{user.username}}" id="hacker-list" style="display:none;"></input>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+
+              <div class="row-fluid hkc-buttons">
+
+                  <div class="span4 hkc-demo centered well">
+                        {{form.demo_link.errors}}
+                    <label for="id_demo_link"><h4>Link to Your Demo:</h4></label>
+                    <input id="id_demo_link" type="text" name="demo_link" />
+                  </div>
+
+                  <div class="span4 hkc-source centered well">
+                        {{form.code_link.errors}}
+                    <label for="id_code_link"><h4>Link to Source Code:</h4></label>
+                    <input id="id_code_link" type="text" name="code_link" />
+                      <a href="{{hack.code_link}}" class="btn">Select Repo from Github</a>
+                  </div>
+                  
+                  <div class="span4 hkc-video centered well">
+                        {{form.video_link.errors}}
+                    <label for="id_video_link"><h4>Link to Your Presentation:<h4>(optional)</h4></h4></label>
+                    <input id="id_video_link" type="text" name="video_link" />
+                  </div>
+              </div>
+
+              <div class="row-fluid">
+                  <div class="span12">
+                        <input class="span12 btn btn-warning btn-large" type="submit" value="Register"></input>
+                  </div>
+              </div>
+
+          </form>
+        </div>
+    </div>
+</div>
+
+
+<style type="text/css">
+/* Picture Styling */
+.hkc-image-box {
+  height: 300px;
+  /*width: 300px;*/
+  border-style: solid;
+  border-width: 1px;
+  border-color: #eee;
+    /*box-shadow: 5px 5px 5px lightgray;*/
+}
+label.filebutton {
+    overflow:hidden;
+    position:relative;
+    background-color: orange;
+}
+label span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding:0;
+}
+</style>
+
+
+<script src="{% static 'lib/autosize/jquery.autosize.js' %}"></script>
+<script type="text/javascript">
+$(window).load(function() {
+
+  $(function(){
+      $('.autosize-box').autosize({append: "\n"});
+  });
+  
+  $('.tooltiped').tooltip();
+  $('#add-hacker-reveal').hide();
+
+    function close_add_box(){
+    $('#add-hacker-reveal').hide();
+    $('#add-hacker').show();
+    };        
+
+    $('#add-hacker-btn').click(function() {
+        $('#add-hacker-reveal').show();
+        $('#add-hacker').hide();
+        return false;
+    });
+
+
+    $('#add-button').click(function(){
+        close_add_box(); 
+
+        var hthumb_list = $("#hacker-thumb-list");
+        var hthumb = $($(".hacker-thumb")[0]).clone();
+        var name = $("#hacker-name-field").val();
+        if(name=="")
+            name = $("#anon-name-field").val();
+        if(name=="")
+            return false;
+        $(hthumb.find("img")[0]).attr({"title":name});
+        
+        hthumb.find(".hacker-name").html(name);
+        var option = "," + name;
+        var value = $("#hacker-list").val() + option;
+        if(images[name]!=null)
+            hthumb.find("img").attr({"src":images[name]});
+
+        hthumb_list.append(hthumb);
+        $("#hacker-list").val(value);
+        $('.tooltiped').tooltip();
+
+        $("#hacker-name-field").val("");
+        $("#anon-name-field").val("");
+        return false;
+    });
+
+    $('.close').click(function() {
+        close_add_box(); 
+        return false;
+    });
+    var usernames = new Array();
+    var images = new Array();
+    function load_users_data(query,process){
+        return $.get('{% url ajax_profile_list %}', { q: query }, function (data) {
+            for(var i = 0; i<data.options.length; i++){
+                usernames[data.options[i]] = data.pks[i];
+                images[data.options[i]] = data.images[i];
+            }
+            return process(data.options);
+        });
+    }
+    $('#hacker-name-field').typeahead({
+        source: load_users_data,
+    });
+
+    $("#anon-name-field").keyup(function(event) {
+        if(event.keyCode == 13){
+            return false;
+        }
+    });
+    $("#anon-name-field").keydown(function(event) {
+        if(event.keyCode == 13){
+            return false;
+        }
+    });
+    $("#hacker-name-field").keyup(function(event) {
+        if(event.keyCode == 13){
+            return false;
+        }
+    });
+    $("#hacker-name-field").keydown(function(event) {
+        if(event.keyCode == 13){
+            return false;
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container">
+	<div class="row-fluid">
+		<div class="span12 centered" style="margin-top:200px;">
+			<h1 class="glow" style="font-size:100px;">500 Error</h1>
+			<p class="marker-font margin" style="margin-top:100px;">Oops... This URL doesn't seem to be going anywhere.</p>
+            <a class="margin" href="{% url home %}"><h3>Hack away</h3></a>
+		</div>
+	</div>
+</div>
+{% endblock %}

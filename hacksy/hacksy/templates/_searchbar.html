@@ -1,0 +1,21 @@
+<form class="navbar-search pull-left" action="{% url home %}" method="get">
+    {% csrf_token %}
+    <input name="q" type="text" placeholder="Search..."  class="search-query typeahead" id="search_main" autocomplete="off" />
+</form>
+
+<script type="text/javascript">
+    $(function(){
+        $('.typeahead').typeahead({
+            source: function (typeahead, query) {
+            return $.post('', { query: query,property:"name" }, function (data) {
+                    console.log(data);
+                    return typeahead.process(data);
+                });
+            },
+            property: 'name',
+            onselect: function (obj) {
+                location.href = obj.url;
+            }
+        });
+    });
+</script>

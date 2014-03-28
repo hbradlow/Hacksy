@@ -1,0 +1,55 @@
+{% load humanize %}
+{% load comments %}
+{% load thumbnail %}
+<span id="comment_{{comment.pk}}">
+    <hr />
+    <div class="row-fluid">
+        <div class="span1">
+            <a href="{{comment.user.get_absolute_url}}">
+                {% thumbnail comment.user.get_profile.image "35x35" crop="center" as im %}
+                    <img class="comment-image" src="{{im.url}}" />
+                {% endthumbnail %}
+            </a>
+        </div>
+        <div class="span11">
+            <div class="row-fluid">
+                <div class="span12">
+                    <a href="{{comment.user.get_absolute_url}}">{{comment.user.get_full_name}}</a>
+                    <div class="comment-text">{{comment.comment}}</div>
+                    {% comment %}
+                        {% get_comment_form for comment as form %}
+                        {% url chatroom_wall as next %}
+                        {% include "comments/form_subcomment.html" %}
+                        <div class="row-fluid">
+                            <div class="span10 offset2">
+                                {% render_comment_list for comment %}
+                            </div>
+                        </div>
+                    {% endcomment %}
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span11">
+                    <span class="comment-timestamp">{{comment.submit_date|naturaltime}}</span>
+                    {% if comment.user == user %}
+                        <a id="comment_link_{{comment.pk}}" class="remove" href="#" style="color:orange;">remove</a>
+                        <script type="text/javascript">
+                            $(function(){
+                                $("#comment_link_{{comment.pk}}").click(function(){
+                                    $.post("{% url ajax-comments-post-comment-remove comment.pk %}",
+                                            {},
+                                            function(data){
+                                                if(data=="worked")
+                                                    $("#comment_{{comment.pk}}").remove();
+                                            }
+                                    );
+                                    return false;
+                                });
+                            });
+                        </script>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</span>

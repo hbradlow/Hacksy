@@ -1,0 +1,7 @@
+venv
+*.py[co]
+*.swp
+*~
+site_media
+private
+local_settings.py

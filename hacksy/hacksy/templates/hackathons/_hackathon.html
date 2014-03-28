@@ -1,0 +1,78 @@
+
+{% load thumbnail %}
+{% load profile_tags %}
+{% load static from staticfiles %}
+
+
+<div class="thumbnail thumbnail-profile">
+    <div class="row-fluid" style="max-height:92px;">
+
+        <div class="span4">
+            <a href="{{hackathon.get_absolute_url}}">
+                {% if hackathon.image %}
+                    {% thumbnail hackathon.image "120x90" crop="center" as im %}
+                    <img class="profile-hack-image" src="{{im.url}}" >
+                    {% endthumbnail %}
+                {% else %}
+                    <img src="{% static 'assets/images/defaults/default120x90.png' %}" >
+                {% endif %}
+            </a>
+        </div>
+        
+        <div class="span8">
+            
+            <div class="row-fluid" style="height: 35px;">
+                <a href="{{hackathon.get_absolute_url}}">
+                    <h4 class="overflow" id="hackathon-name">{{hackathon.name|truncatechars:22}}</h4>
+                </a>
+            </div>        
+
+            {% if profile and profile.user.is_authenticated %}
+                {% if profile.user|hack_for_hackathon_name:hackathon %}
+                <div class="fluid-row" style="height: 40px;">
+                    <small class="small">Hack: </small>
+                    <p><a class="overflow" href="{{ profile.user|hack_for_hackathon_url:hackathon }}" id="hackathon-hack-name">
+                        {{ profile.user|hack_for_hackathon_name:hackathon }}
+                    </a></p>
+                </div>
+                {% else %}
+                <div class="fluid-row" style="height: 40px;">
+                    <small class="small">You did not attend this hackathon.</small>
+                </div>
+
+                {% endif %}
+            {% else %}
+                <div class="fluid-row" style="height: 40px;">
+                    <small class="small"></small>
+                </div>
+            {% endif %}
+
+
+            <div class="row-fluid">    
+                <div class="span12">
+                    <small class="small pull-right">{{hackathon.start_time.date}}</small>
+                </div>
+            </div>                                                                      
+
+        </div>
+
+    </div>
+</div>
+
+<style type="text/css">
+    
+    #hackathon-name {
+        padding: 0px 0px 0px 0px;
+        margin: 0;
+        line-height: 35px;
+        height: 35px;
+        color: orange;
+    }
+    #hackathon-hack-name {
+        font-size: 14px;
+        height: 40px;
+        padding: 0px 0px 0px 0px;
+        margin: 0px;
+        color: white;
+    }
+</style>

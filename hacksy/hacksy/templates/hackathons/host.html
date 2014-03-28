@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block head_title %}Host | Hacksy{% endblock %}
+
+
+{% block body %}
+
+<div class="container-fluid centered">
+	<div class='row-fluid'>
+		<div class="span10 offset1 jumbotron">
+			<h1 class='blurb marker-font'>THE FASTEST AND EASIEST WAY TO SET UP A HACKATHON</h1>
+			<p class="lead">We provide a simple and robust interface for organizers to set up hackatons in just a few minutes.</p>
+	        <div class="row-fluid" style="margin-top:80px;">
+	          <div class="span4 offset4">
+	            <a href="/hackathons/create/" class="span12 btn-hacksy btn-hacksy-large">Create Hackathon</a>
+	          </div>
+	        </div>
+			<div class="row-fluid" style="margin-top:80px;">
+				<div class="span4">
+					<h2>Manage Everything from One Place</h2>
+					<p></p>
+				</div>
+				<div class="span4">
+					<h2>Provide a Great Experience for Hackers</h2>
+					<p></p>
+				</div>
+				<div class="span4">
+					<h2>Oh and By the Way, It Is Completely Free</h2>
+					<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

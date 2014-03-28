@@ -1,0 +1,160 @@
+{% extends "profiles/base.html" %}
+{% load static from staticfiles %}
+{% load comments %}
+{% load webdesign %}
+{% load thumbnail %}
+{% load profile_tags %}
+
+{% block head_title %}{{profile.user.username}}{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row-fluid">
+		<div class="span10 offset1">
+			<div class="row-fluid">
+				
+				<div class="span4">
+					<div class="row-fluid margin">
+						<div class="span12">
+                            {% if profile.image %}
+                                {% thumbnail profile.image "250x250" crop="center" as im %}
+                                    <img class="profile-image" src="{{im.url}}" style="border: 2px solid black;">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static 'assets/images/defaults/default250x250.png' %}">
+                            {% endif %}
+						</div>
+					</div>
+					<div class="row-fluid">
+						<h1 class="span12" style="font-size:60px;padding-top:20px;padding-bottom:10px;overflow:hidden;">{{profile.user.username}}</h1>
+					</div>
+                    <!--
+					<div class="row-fluid" id="popularity">
+						<h3 class="span10 offset1">Hacker level: <strong>72</strong></h3>
+					</div>
+					<div class="row-fluid">
+						<div class="span10 offset1">
+							<a class="span12 centered btn btn-large">Follow</a>
+						</div>
+					</div>
+                    -->
+					<div class="row-fluid" id="details">
+						<div class="span12" style="font-size:16px;">
+                            <h2 id="reputation">Reputation: <strong>{{ profile.reputation }}</strong></h2>
+                            <h6 class="margin" id="language">Favorite Language: <strong>{{profile.first_language}}</strong></h6>
+                            <h6 id="membership">Joined Hacksy on {{profile.joined.date}}</h6>	
+                            <h6 id="location">Lives in {{profile.location}}</h6>
+                            <h5 style="margin-top:30px;font-size:16px;">About Hacking</h5>
+                            <div id="bio"><p>{{ profile.about }}</p></div>
+						</div>
+					</div>			
+				</div>
+
+
+				<div class="span8 profile-wrapper" style="min-height: 1000px;">
+                    {% if user == profile.user %}
+                    <div class="row-fluid margin">
+                        <div class="span11">
+                            <a href="{% url profile_edit profile.user.username %}" class="btn btn-warning btn-edit pull-right">Edit Profile</a>
+                        </div>
+                    </div>					
+                    {% endif %}
+					<div class="row-fluid margin">
+						<div class="span10 offset1 tabbable">
+						  <ul class="nav nav-tabs">
+						  	{% if user == profile.user %}
+						    <li class="active"><a href="#profile-hacks" data-toggle="tab">My Hacks</a></li>
+							{% else %}
+							<li class="active"><a href="#profile-hacks" data-toggle="tab">Hacks</a></li>
+							{% endif %}
+						    {% if user == profile.user %}
+                            <li><a href="#profile-awesome-hacks" data-toggle="tab">Awesome Hacks</a></li>
+                            {% endif %}
+						    <li><a href="#profile-hackathons" data-toggle="tab">Hackathons</a></li>
+						  </ul>
+						  <div class="tab-content">
+						    
+
+						    <div class="tab-pane active" id="profile-hacks">
+							      <div class="row-fluid">
+							      	{% if user == profile.user and not profile.hacks %}
+							      		<div class="span12 centered">
+							      			<h3>You haven't shared any hacks yet.</h3>
+							      			<a class="btn btn-warning" href="{% url hack_create %}">Post my first hack</a>
+							      		</div>
+							      	{% else %}
+									<ul class="thumbnails thumbnails-profile">
+                                        {% for hack in profile.hacks %}
+                                            <li class="span12" style="margin:0px;">
+                                                {% include "hacks/_hack.html" %}
+                                            </li>
+                                        {% endfor %}
+									</ul>
+									{% endif %}
+								</div>
+						    </div>
+
+							{% if user == profile.user %}
+                            <div class="tab-pane" id="profile-awesome-hacks">
+                                  <div class="row-fluid">
+                                    <ul class="thumbnails thumbnails-profile">
+                                        {% for hack in profile.user.awesomeness_set.all %}
+                                            <li class="span12" style="margin:0px;">
+                                                {% include "hacks/_hack.html" %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endif %}
+
+						    <div class="tab-pane" id="profile-hackathons">
+							      <div class="row-fluid">
+									<ul class="thumbnails thumbnails-profile">
+                                        {% for hackathon in profile.hackathons %}
+                                        	<li class="span12" style="margin:0px;">
+                                            	{% include "hackathons/_hackathon.html" %}
+                                            </li>
+                                        {% endfor %}
+									</ul>
+								</div>
+						    </div>
+
+						  </div>
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+    </div>
+</div>
+
+
+<script src="{% static 'bootstrap/docs/assets/js/holder/holder.js' %}"></script>
+<script type="text/javascript">
+    $(window).load(function() {
+        $('.tooltiped').tooltip();
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static from staticfiles %}
+
+{% block head_title %}Browse | Hacksy{% endblock %}
+
+
+{% block body %}
+<div class="container-fluid centered">
+	<div class="row-fluid">
+		<div class="span10 offset1">
+			<h2>Browse through all Hacks, Hackers, and Hackathons</h2>
+			<form class="form-search">
+	  			<input type="text">
+	  			<!-- <button type="submit" class="btn btn-info">Search</button> -->
+			</form>
+			
+			<div class="btn-group">
+			  <button class="btn-hacksy">Hacks</button>
+			  <button class="btn-hacksy">Hackers</button>
+			  <button class="btn-hacksy">Hackathons</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

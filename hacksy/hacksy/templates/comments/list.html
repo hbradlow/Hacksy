@@ -1,0 +1,4 @@
+{% load comments %}
+{% for comment in comment_list reversed %}
+    {% include "comments/comment.html" %}
+{% endfor %}
